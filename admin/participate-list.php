@@ -1,9 +1,13 @@
 <?php
 session_start();
-error_reporting(E_ALL); // Set error reporting to ALL for debugging
-ini_set('display_errors', 1); // Ensure errors are displayed
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 include('includes/dbconnection.php');
+
+if (!isset($_SESSION['sturecmsaid']) || strlen($_SESSION['sturecmsaid']) == 0) {
+  header('location:logout.php');
+  exit;
+}
 
 // Check if the user is logged in
 if (strlen($_SESSION['sturecmsstuid']) == 0) {
@@ -97,6 +101,9 @@ try {
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title">Participants for Event ID: <?php echo htmlentities($event_id); ?></h4>
+                                    <div class="mb-4 text-center">
+                                        <a href="register-participate.php?event_id=<?php echo htmlentities($event_id); ?>" class="btn btn-primary">Add Participant</a>
+                                    </div>
                                     <div class="table-responsive border rounded p-1">
                                         <table class="table">
                                             <thead>
@@ -112,21 +119,19 @@ try {
                                             <tbody>
                                                 <?php
                                                 $cnt = 1;
-                                                if ($queryz->rowCount() > 0) {
-                                                    foreach ($resultsz as $row) {
-                                                        $studentIC = isset($row->studentIC) ? htmlentities($row->studentIC) : '';
-                                                        $studentName = isset($row->studentName) ? htmlentities($row->studentName) : '';
-                                                        $studentPhoneNumber = isset($row->studentPhoneNumber) ? htmlentities($row->studentPhoneNumber) : '';
-                                                        $verificationStatus = isset($row->verificationStatus) ? htmlentities($row->verificationStatus) : '';
-
+                                                if ($query->rowCount() > 0) {
+                                                    foreach ($results as $row) {
                                                         echo "<tr>";
                                                         echo "<td>" . htmlentities($cnt) . "</td>";
-                                                        echo "<td>" . $studentIC . "</td>";
-                                                        echo "<td>" . $studentName . "</td>";
-                                                        echo "<td>" . $studentPhoneNumber . "</td>";
-                                                        echo "<td id='verification-status-" . $row->ID . "'>" . $verificationStatus . "</td>";
+                                                        echo "<td>" . htmlentities($row->studentIC) . "</td>";
+                                                        echo "<td>" . htmlentities($row->studentName) . "</td>";
+                                                        echo "<td>" . htmlentities($row->studentPhoneNumber) . "</td>";
                                                         echo "<td>";
-                                                        echo "<button id='verification-btn-" . $row->ID . "' class='btn " . ($verificationStatus == 'Yes' ? 'btn-danger' : 'btn-success') . "' onclick=\"toggleVerification(" . htmlentities($row->ID) . ", '" . htmlentities($verificationStatus) . "')\">" . ($verificationStatus == 'No' ? 'Unverified' : 'Verified') . "</button>";
+                                                        echo "<form action='update-attendance.php' method='POST'>";
+                                                        echo "<input type='hidden' name='participant_id' value='" . $row->ID . "'>";
+                                                        echo "<button type='submit' name='attendance' value='attend' class='btn btn-success'>Attend</button>";
+                                                        echo "<button type='submit' name='attendance' value='absent' class='btn btn-danger'>Absent</button>";
+                                                        echo "</form>";
                                                         echo "</td>";
                                                         echo "</tr>";
                                                         $cnt++;

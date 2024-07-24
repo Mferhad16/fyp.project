@@ -22,7 +22,7 @@
               <p class="profile-name"><?php echo htmlentities($row->eoname); ?></p>
               <p class="designation"><?php echo htmlentities($row->eoemail); ?></p><?php $cnt = $cnt + 1;
                                                                                   }
-                } ?>
+                                                                                } ?>
         </div>
 
       </a>

@@ -92,26 +92,16 @@ try {
                                                 $cnt = 1;
                                                 if ($queryz->rowCount() > 0) {
                                                     foreach ($resultsz as $row) {
-                                                        $studentIC = isset($row->studentIC) ? htmlentities($row->studentIC) : '';
-                                                        $studentName = isset($row->studentName) ? htmlentities($row->studentName) : '';
-                                                        $studentPhoneNumber = isset($row->studentPhoneNumber) ? htmlentities($row->studentPhoneNumber) : '';
-                                                        $attendanceStatus = isset($row->attendanceStatus) ? htmlentities($row->attendanceStatus) : '';
-
                                                         echo "<tr>";
                                                         echo "<td>" . htmlentities($cnt) . "</td>";
-                                                        echo "<td>" . $studentIC . "</td>";
-                                                        echo "<td>" . $studentName . "</td>";
-                                                        echo "<td>" . $studentPhoneNumber . "</td>";
-                                                        echo "<td>" . $attendanceStatus . "</td>";
+                                                        echo "<td>" . htmlentities($row->studentIC) . "</td>";
+                                                        echo "<td>" . htmlentities($row->studentName) . "</td>";
+                                                        echo "<td>" . htmlentities($row->studentPhoneNumber) . "</td>";
                                                         echo "<td>";
                                                         echo "<form action='update-attendance.php' method='POST'>";
-                                                        echo "<input type='hidden' name='participant_id' value='" . htmlentities($row->ID) . "'>";
-                                                        echo "<input type='hidden' name='event_id' value='" . htmlentities($event_id) . "'>";
-                                                        if ($attendanceStatus == 'present') {
-                                                            echo "<button type='submit' name='attendance' value='absent' class='btn btn-danger'>Absent</button>";
-                                                        } else {
-                                                            echo "<button type='submit' name='attendance' value='present' class='btn btn-success'>Present</button>";
-                                                        }
+                                                        echo "<input type='hidden' name='participant_id' value='" . $row->ID . "'>";
+                                                        echo "<button type='submit' name='attendance' value='attend' class='btn btn-success'>Attend</button>";
+                                                        echo "<button type='submit' name='attendance' value='absent' class='btn btn-danger'>Absent</button>";
                                                         echo "</form>";
                                                         echo "</td>";
                                                         echo "</tr>";
